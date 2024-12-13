@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.LookCow" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/verdeOscuro</item>
+        <item name="colorSecondary">@color/verde</item>
+        <item name="colorAccent">@color/black</item>
+    </style>
+    <!-- Base 2 application theme. -->
+    <style name="Base.Theme.LookCowMapa" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/rojo</item>
+        <item name="colorSecondary">@color/verde</item>
+        <item name="colorAccent">@color/black</item>
+    </style>
+
+    <style name="Theme.LookCow" parent="Base.Theme.LookCow" />
+</resources>

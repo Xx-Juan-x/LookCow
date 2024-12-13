@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Controladora.DispositivoActivity"
+    android:orientation="vertical"
+    android:background="@drawable/dispositivo_vacas">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="15dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dispositivos"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/textView_id_dispositivo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ID del Dispositivo"
+                android:textAlignment="center"
+                android:textColor="#FDF0DE"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txtidDispo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:hint="Id Dispositivo"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
+                    android:textStyle="bold|italic"
+                    android:textSize="16sp"
+                    android:backgroundTint="#A1FFFFFF"
+                    android:background="@drawable/border"
+                    android:padding="11dp"/>
+
+                <Button
+                    android:id="@+id/btnbusDispo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Buscar"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:backgroundTint="#E169431F"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView_marca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Marca"
+                android:textAlignment="center"
+                android:textColor="#FDF0DE"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txtmarca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Marca"
+                    android:layout_weight="4"
+                    android:inputType="text"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
+                    android:textStyle="bold|italic"
+                    android:textSize="16sp"
+                    android:backgroundTint="#A1FFFFFF"
+                    android:background="@drawable/border"
+                    android:padding="11dp"/>
+
+                <Button
+                    android:id="@+id/btnbusMarca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Buscar"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:backgroundTint="#E169431F"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView_descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción"
+                android:textAlignment="center"
+                android:textColor="#FDF0DE"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtdesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Descripción"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="@color/gray"
+                android:textColorHint="@color/gray"
+                android:textStyle="bold|italic"
+                android:textSize="16sp"
+                android:backgroundTint="#A1FFFFFF"
+                android:background="@drawable/border"
+                android:padding="11dp"
+                android:layout_marginTop="3dp"/>
+
+            <TextView
+                android:id="@+id/textView_estado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estado"
+                android:textAlignment="center"
+                android:textColor="#FDF0DE"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtestado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Estado"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="@color/gray"
+                android:textColorHint="@color/gray"
+                android:textStyle="bold|italic"
+                android:textSize="16sp"
+                android:backgroundTint="#A1FFFFFF"
+                android:background="@drawable/border"
+                android:padding="11dp"
+                android:layout_marginTop="3dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <Button
+                    android:id="@+id/btnmod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Modificar"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:backgroundTint="#E169431F"
+                    android:padding="20dp"/>
+
+                <Button
+                    android:id="@+id/btnreg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:text="Registrar"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:backgroundTint="#E169431F"
+                    android:padding="20dp"/>
+
+                <Button
+                    android:id="@+id/btneli"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Eliminar"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:backgroundTint="#E169431F"
+                    android:padding="20dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Listado Disposotivos"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="      Id      Marca         Descripcion       Estado "
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="#C069431F"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ListView
+                        android:id="@+id/lvDatos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@android:color/white"
+                        android:dividerHeight="1dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:layout_margin="8dp"
+                        android:scrollbars="vertical"
+                        android:background="#653E3B3B"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+        </LinearLayout>
+</LinearLayout>
