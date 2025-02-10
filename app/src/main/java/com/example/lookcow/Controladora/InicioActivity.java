@@ -2,15 +2,11 @@ package com.example.lookcow.Controladora;
 
 import android.Manifest;
 import android.app.PendingIntent;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,14 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.lookcow.databinding.ActivityInicioBinding;
 import com.example.lookcow.Mapa.GeofenceHelper;
 import com.example.lookcow.R;
-import com.example.lookcow.databinding.ActivityInicioBinding;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,13 +31,11 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,7 +43,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.SphericalUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class InicioActivity extends DrawerBaseActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
 
@@ -96,60 +90,73 @@ public class InicioActivity extends DrawerBaseActivity implements OnMapReadyCall
 
     }
 
-    /*   private void ObtenerLatLongFirebase() {
-           if (ActivityCompat.checkSelfPermission(this,
-                   Manifest.permission.ACCESS_FINE_LOCATION)
-                   != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                   != PackageManager.PERMISSION_GRANTED) {
-
-               ActivityCompat.requestPermissions(InicioActivity.this,
-                       new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                       MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-               return;
-           }
-           fusedLocationClient.getLastLocation()
-                   .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                       @Override
-                       public void onSuccess(Location location) {
-                           // Got last known location. In some rare situations this can be null.
-                           if (location != null) {
-                           }
-                       }
-                   });
-       }
-   */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        LatLng rosario = new LatLng(-32.94682, -60.63932);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rosario, 15));
 
-        agregarGeovalladoCuadrado(mMap, latitud, longitud, lado);
-        cargarMarcadoresDesdeRealtimeDatabase(mMap);
+        Polygon geovallado = agregarGeovalladoCuadrado(mMap, latitud, longitud, lado);
+        cargarMarcadoresDesdeRealtimeDatabase(mMap, geovallado);
         enableUserLocation();
-
         this.mMap.setOnMapClickListener(this);
         this.mMap.setOnMapLongClickListener(this);
     }
 
-    public void agregarGeovalladoCuadrado(GoogleMap mMap, double latitud, double longitud, double lado) {
-        // Calcula las coordenadas de las esquinas del cuadrado
+    public Polygon agregarGeovalladoCuadrado(GoogleMap mMap, double latitud, double longitud, double lado) {
+        // Coordenadas de las esquinas del cuadrado
         double mediaDistancia = lado / 2.0; // La mitad de la longitud del lado del cuadrado
         LatLng esquina1 = SphericalUtil.computeOffset(new LatLng(latitud, longitud), mediaDistancia, 45.0); // Esquina superior derecha
         LatLng esquina2 = SphericalUtil.computeOffset(new LatLng(latitud, longitud), mediaDistancia, 135.0); // Esquina superior izquierda
         LatLng esquina3 = SphericalUtil.computeOffset(new LatLng(latitud, longitud), mediaDistancia, 225.0); // Esquina inferior izquierda
         LatLng esquina4 = SphericalUtil.computeOffset(new LatLng(latitud, longitud), mediaDistancia, 315.0); // Esquina inferior derecha
 
-        // Crea un polígono con las esquinas del cuadrado
+        // Polígono con las esquinas del cuadrado
         Polygon geovallado = mMap.addPolygon(new PolygonOptions()
                 .add(esquina1, esquina2, esquina3, esquina4)
                 .strokeColor(Color.GREEN)
                 .fillColor(Color.argb(70, 0, 255, 0)) // Verde transparente
         );
         geovallado.setVisible(true);
+        LatLng latLng = new LatLng(latitud,longitud);
+        Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, GEOFENCE_RADIUS,
+                Geofence.GEOFENCE_TRANSITION_DWELL |
+                        Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_EXIT);
+        GeofencingRequest geofencingRequest = geofenceHelper.geofencingRequest(geofence);
+        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+        }
+        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Exito: "+"Geofence agregado");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String error = geofenceHelper.getErrorString(e);
+                        Log.d(TAG, "En falla: "+error);
+                    }
+                });
+        return geovallado;
     }
 
-    public void cargarMarcadoresDesdeRealtimeDatabase(GoogleMap mMap) {
-        BitmapDescriptor cowIcon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marcador_cow);
+    public void cargarMarcadoresDesdeRealtimeDatabase(GoogleMap mMap, Polygon geovallado) {
+        BitmapDescriptor iconoCabaIn = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN);//Color del marcador
+        BitmapDescriptor iconoCabaOut = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = db.getReference().child("LatLng");
 
@@ -183,9 +190,12 @@ public class InicioActivity extends DrawerBaseActivity implements OnMapReadyCall
 
                     if (latitud != null && longitud != null) {
                         LatLng ubicacion = new LatLng(latitud, longitud);
+                        boolean dentro = isPointInPolygon(ubicacion, geovallado);
+
                         MarkerOptions markerOptions = new MarkerOptions()
                                 .position(ubicacion)
-                                .title(ubicacionSnapshot.getKey());
+                                .title(ubicacionSnapshot.getKey())
+                                .icon(dentro ? iconoCabaIn : iconoCabaOut);
                         mMap.addMarker(markerOptions);
                     } else {
                         Log.e("MapaActivity", "Datos nulos en la base de datos");
@@ -272,70 +282,36 @@ public class InicioActivity extends DrawerBaseActivity implements OnMapReadyCall
     }
 
 
-    private void handleMapLongClick(LatLng latLng) {
+   private void handleMapLongClick(LatLng latLng) {
         mMap.clear();
-        //addMarker(latLng);
-        agregarGeovalladoCuadrado(mMap, latitud, longitud, lado);
-        cargarMarcadoresDesdeRealtimeDatabase(mMap);
-        addCircle(latLng, GEOFENCE_RADIUS);
-        addGeofence(latLng, GEOFENCE_RADIUS);
+        Polygon poligono = agregarGeovalladoCuadrado(mMap, latLng.latitude, latLng.longitude, lado);
+        agregarGeovalladoCuadrado(mMap, latLng.latitude, latLng.longitude, lado);
+        cargarMarcadoresDesdeRealtimeDatabase(mMap, poligono);
+
     }
-
-    private void addGeofence(LatLng latLng, float radius) {
-
-        Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius,
-                Geofence.GEOFENCE_TRANSITION_DWELL |
-                        Geofence.GEOFENCE_TRANSITION_ENTER |
-                        Geofence.GEOFENCE_TRANSITION_EXIT);
-        GeofencingRequest geofencingRequest = geofenceHelper.geofencingRequest(geofence);
-        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Exito: "+"Geofence agregado");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        String error = geofenceHelper.getErrorString(e);
-                        Log.d(TAG, "En falla: "+error);
-                    }
-                });
-    }
-
-    private void addMarker(LatLng latLng) {
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng);
-        mMap.addMarker(markerOptions);
-    }
-    private void addCircle(LatLng latLng, float radius) {
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
-        CircleOptions circleOptions = new CircleOptions();
-        circleOptions.center(latLng);
-        circleOptions.radius(radius);
-        circleOptions.strokeColor(Color.argb(255, 255, 0, 0));
-        circleOptions.fillColor(Color.argb(64, 255, 0, 0));
-        circleOptions.strokeWidth(4);
-        mMap.addCircle(circleOptions);
-    }
-
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         txtLatitud.setText(" " + latLng.latitude);
         txtLongitud.setText(" " + latLng.longitude);
 
     }
+    private boolean isPointInPolygon(LatLng point, Polygon polygon) {
+        int intersectCount = 0;
+        List<LatLng> vertices = polygon.getPoints();
+
+        for (int i = 0; i < vertices.size() - 1; i++) {
+            LatLng v1 = vertices.get(i);
+            LatLng v2 = vertices.get(i + 1);
+
+            if ((v1.longitude > point.longitude) != (v2.longitude > point.longitude)) {
+                double slope = (v2.latitude - v1.latitude) / (v2.longitude - v1.longitude);
+                double intersectLat = v1.latitude + slope * (point.longitude - v1.longitude);
+                if (point.latitude < intersectLat) {
+                    intersectCount++;
+                }
+            }
+        }
+        return (intersectCount % 2) == 1;
+    }
+
 }

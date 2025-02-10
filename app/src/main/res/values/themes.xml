@@ -13,6 +13,12 @@
         <item name="colorSecondary">@color/verde</item>
         <item name="colorAccent">@color/black</item>
     </style>
+    <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">#FF0000</item> <!-- Color primario -->
+        <item name="colorAccent">#FF0000</item> <!-- Color de acento -->
+        <item name="android:windowBackground">@android:color/white</item> <!-- Fondo del diálogo -->
+        <item name="android:textColorPrimary">#000000</item> <!-- Color del texto principal -->
+            </style>
 
     <style name="Theme.LookCow" parent="Base.Theme.LookCow" />
 </resources>

@@ -1,47 +1,68 @@
 package com.example.lookcow.Controladora;
 
+import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.lookcow.Modelo.Vientre;
 import com.example.lookcow.R;
 import com.example.lookcow.databinding.ActivityVientresBinding;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class VientresActivity extends DrawerBaseActivity {
 
-        private EditText txtid, txtInicio, txtParto, txtObserva, txtEstado;
-        private Button btnbus, btnmod, btnreg, btneli, btnbusInicio, btnbusParto;
-        private ListView lvDatos;
-
+    private EditText txtid, txtParto, txtObserva, txtEstado;
+    private Button btnbus, btnmod, btnreg, btneli, btnParto, btnPrenado;
+    private ListView lvDatos;
+    private DatePickerDialog datePickerDialogInicio, openDatePickerParto;
+    private String date, date2;
+    private EditText txtInicio;
     ActivityVientresBinding activityBinding;
+    private LocalDate fechaParto, fechaInicio;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy", new Locale("es"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,30 +70,168 @@ public class VientresActivity extends DrawerBaseActivity {
         activityBinding = ActivityVientresBinding.inflate(getLayoutInflater());
         setContentView(activityBinding.getRoot());
 
-            txtid   = findViewById(R.id.txtid);
-            txtInicio = findViewById(R.id.txtFechaInicio);
-            txtParto = findViewById(R.id.txtFechaParto);
-            txtObserva = findViewById(R.id.txtObservaciones);
-            txtEstado = findViewById(R.id.txtEstado);
-            btnbus  = findViewById(R.id.btnbus);
-            btnmod  = findViewById(R.id.btnmod);
-            btnreg  = findViewById(R.id.btnreg);
-            btneli  = findViewById(R.id.btneli);
-            lvDatos = findViewById(R.id.lvDatos);
-            btnbusInicio = findViewById(R.id.btnbusInicio);
-            btnbusParto = findViewById(R.id.btnbusParto);
+        txtid = findViewById(R.id.txtid);
+        txtParto = findViewById(R.id.txtFechaParto);
+        txtObserva = findViewById(R.id.txtObservaciones);
+        txtEstado = findViewById(R.id.txtEstado);
+        btnbus = findViewById(R.id.btnbus);
+        btnmod = findViewById(R.id.btnmod);
+        btnreg = findViewById(R.id.btnreg);
+        btneli = findViewById(R.id.btneli);
+        lvDatos = findViewById(R.id.lvDatos);
+        txtInicio = findViewById(R.id.textInicio);
+        btnParto = findViewById(R.id.fechaPartoButton);
+        btnParto.setText(getFechaActual());
+        btnPrenado = findViewById(R.id.fechaButton);
+        btnPrenado.setText(getFechaActual());
 
-            botonBuscar();
-            botonBuscarInicio();
-            botonBuscarParto();
-            botonModificar();
-            botonRegistrar();
-            botonEliminar();
-            listarVientres();
+        initDatePicker();
+        initDatePicker2();
+        botonBuscar();
+        botonModificar();
+        botonRegistrar();
+        botonEliminar();
+        listarVientres();
 
         }   //cierra el onCreate
 
-        private void botonBuscar(){
+    //Metodo para ingresar la fecha actual de embaraso
+    private String getFechaActual() {
+        Calendar cal = Calendar.getInstance();
+        int ano = cal.get(Calendar.YEAR);
+        int mes = cal.get(Calendar.MONTH);
+        mes = mes + 1;
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+        return makeDateString(dia, mes, ano);
+    }
+    // Ejemplo de uso en el DatePicker
+    private void initDatePicker() {
+        Log.e("dentro del initDATEPICKER", "dentro del initDATEPICKER");
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int ano, int mes, int dia) {
+                mes = mes + 1;
+                date = makeDateString(dia, mes, ano);
+                btnPrenado.setText(date);
+                txtInicio.setText(date);
+                // Calcular la fecha de parto
+                fechaInicio = LocalDate.of(ano, mes, dia);
+                calcularFechaParto(fechaInicio);
+            }
+        };
+        Calendar cal = Calendar.getInstance();
+        int ano = cal.get(Calendar.YEAR);
+        int mes = cal.get(Calendar.MONTH);
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+
+        int style = android.app.AlertDialog.THEME_HOLO_LIGHT;
+        datePickerDialogInicio = new DatePickerDialog(this, style, dateSetListener, ano, mes, dia);
+        datePickerDialogInicio.getDatePicker().setMaxDate(System.currentTimeMillis());
+           }
+    private void initDatePicker2() {
+        Log.e("dentro del initDATEPICKER2", "dentro del initDATEPICKER 2");
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int ano, int mes, int dia) {
+                mes = mes + 1;
+                date2 = makeDateString(dia, mes, ano);
+                btnParto.setText(date2);
+                txtParto.setText(date2);
+                fechaParto = LocalDate.of(ano, mes, dia);
+                calcularFechaInicio(fechaParto);
+            }
+        };
+        Calendar cal = Calendar.getInstance();
+        int ano = cal.get(Calendar.YEAR);
+        int mes = cal.get(Calendar.MONTH);
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+        int style = android.app.AlertDialog.THEME_HOLO_LIGHT;
+        openDatePickerParto = new DatePickerDialog(this, style, dateSetListener, ano, mes, dia+1);
+        openDatePickerParto.getDatePicker().setMinDate(System.currentTimeMillis());
+    }
+    private String makeDateString(int dia, int mes, int ano) {
+        return getMonthFormat(mes) + " " + dia + " " + ano;
+    }
+    private String getMonthFormat(int mes) {
+        if (mes == 1)
+            return "ene";
+        if (mes == 2)
+            return "feb";
+        if (mes == 3)
+            return "mar";
+        if (mes == 4)
+            return "abr";
+        if (mes == 5)
+            return "may";
+        if (mes == 6)
+            return "jun";
+        if (mes == 7)
+            return "jul";
+        if (mes == 8)
+            return "ago";
+        if (mes == 9)
+            return "set";
+        if (mes == 10)
+            return "oct";
+        if (mes == 11)
+            return "nov";
+        if (mes == 12)
+            return "dic";
+        //Default
+        return "ene";
+    }
+    public void openDatePicker(View view) {
+        datePickerDialogInicio.show();
+    }// fin de ingresar fecha de embaraso
+    public void openDatePickerParto(View view) {
+        openDatePickerParto.show();
+    }
+    // Método para convertir String a LocalDate
+    private LocalDate convertirAFecha(String fechaString) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy", new Locale("es"));
+            return LocalDate.parse(fechaString, formatter);
+        } catch (DateTimeParseException e) {
+            // Manejar el error si la fecha no tiene el formato correcto
+            Log.e("VientresActivity", "Error al convertir fecha: " + fechaString, e);
+            return null; // Devuelve null en caso de error
+        }
+    }
+
+    // Nueva función calcularFechaParto
+    private void calcularFechaParto(LocalDate inicio) {
+        if (inicio == null) {
+            Toast.makeText(this, "Fecha de inicio no válida", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Calcular la fecha de parto (283 días después)
+        LocalDate fechaPartofunc = inicio.plusDays(283);
+
+        // Formatear la fecha de parto al formato ("MMM dd yyyy")
+        String partoFormateado = fechaPartofunc.format(formatter);
+        //partoFormateado = partoFormateado.toUpperCase();
+        // Mostrar la fecha de parto en txtParto
+        txtParto.setText(partoFormateado);
+        btnParto.setText(partoFormateado);
+    }
+
+    // Nueva función calcularFechaInicio
+    private void calcularFechaInicio(LocalDate parto) {
+        if (parto == null) {
+            Toast.makeText(this, "Fecha de parto no válida", Toast.LENGTH_SHORT).show();
+            return;
+        }
+       // Calcular la fecha de inicio (283 días antes)
+        LocalDate fechaIniciofunc = parto.minusDays(283);
+
+        // Formatear la fecha de inicio al formato ("MMM dd yyyy")
+        String inicioFormateado = fechaIniciofunc.format(formatter);
+        //inicioFormateado = inicioFormateado.toUpperCase();
+        txtInicio.setText(inicioFormateado);
+        btnPrenado.setText(inicioFormateado);
+    }
+
+    private void botonBuscar(){
 
             btnbus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,133 +258,27 @@ public class VientresActivity extends DrawerBaseActivity {
                                         ocultarTeclado();
                                         txtInicio.setText(x.child("fechaInicio").getValue().toString());
                                         txtParto.setText(x.child("fechaParto").getValue().toString());
+                                        btnParto.setText(x.child("fechaParto").getValue().toString());
                                         txtObserva.setText(x.child("observaciones").getValue().toString());
                                         txtEstado.setText(x.child("estado").getValue().toString());
                                         break;
                                     }
-
                                 }
                                 if (!res){
                                     ocultarTeclado();
                                     Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "ID ("+auxId+") no encontrado!!", Toast.LENGTH_SHORT).show();
-
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
-
                     } //cierra el if/else
                 }
             });
-
         }//cierra el metodo boton buscar x ID
-        private void botonBuscarInicio(){
 
-            btnbusInicio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (txtInicio.getText().toString().trim().isEmpty()){
-                        ocultarTeclado();
-                        Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Escriba una Fecha para BUSCAR!!!", Toast.LENGTH_SHORT).show();
-
-                    } else {
-
-                        String inicio = txtInicio.getText().toString();
-                        FirebaseDatabase db = FirebaseDatabase.getInstance();
-                        DatabaseReference databaseReference = db.getReference(Vientre.class.getSimpleName());
-                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                boolean res = false;
-                                for (DataSnapshot x : snapshot.getChildren()) {
-
-                                    if (inicio.equalsIgnoreCase(x.child("fechaInicio").getValue().toString())) {
-                                        res = true;
-                                        ocultarTeclado();
-                                        txtid.setText(x.child("id").getValue().toString());
-                                        txtParto.setText(x.child("fechaParto").getValue().toString());
-                                        txtObserva.setText(x.child("observaciones").getValue().toString());
-                                        txtEstado.setText(x.child("estado").getValue().toString());
-                                        break;
-                                    }
-
-                                }
-                                if (!res){
-                                    ocultarTeclado();
-                                    Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Fecha ("+inicio+") no encontrada!!", Toast.LENGTH_SHORT).show();
-
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-                    } //cierra el if/else
-                }
-            });
-
-        }//cierra el metodo boton buscar x Nombre
-        private void botonBuscarParto(){
-
-            btnbusParto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (txtParto.getText().toString().trim().isEmpty()){
-                        ocultarTeclado();
-                        Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Escriba una Fecha para BUSCAR!!!", Toast.LENGTH_SHORT).show();
-
-                    } else {
-
-                        String parto = txtParto.getText().toString();
-                        FirebaseDatabase db = FirebaseDatabase.getInstance();
-                        DatabaseReference databaseReference = db.getReference(Vientre.class.getSimpleName());
-                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                boolean res = false;
-                                for (DataSnapshot x : snapshot.getChildren()) {
-
-                                    if (parto.equalsIgnoreCase(x.child("fechaParto").getValue().toString())) {
-                                        res = true;
-                                        ocultarTeclado();
-                                        txtid.setText(x.child("id").getValue().toString());
-                                        txtInicio.setText(x.child("fechaInicio").getValue().toString());
-                                        txtObserva.setText(x.child("observaciones").getValue().toString());
-                                        txtEstado.setText(x.child("estado").getValue().toString());
-                                        break;
-                                    }
-
-                                }
-                                if (!res){
-                                    ocultarTeclado();
-                                    Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Fecha ("+parto+") no encontrada!!", Toast.LENGTH_SHORT).show();
-
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-                    } //cierra el if/else
-                }
-            });
-
-        }//cierra el metodo boton buscar x Apellido
-        private void botonModificar(){
+    private void botonModificar(){
 
             btnmod.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -246,23 +299,8 @@ public class VientresActivity extends DrawerBaseActivity {
                         String observa = txtObserva.getText().toString();
                         String estado = txtEstado.getText().toString();
 
-                        //Valida el formato de la fecha
-                        if (!isValidDate(inicio) || !isValidDate(parto)) {
-                            ocultarTeclado();
-                            Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Formato de fecha incorrecto. Use dd/MM/yyyy.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        // Verificar que la fecha de inicio sea menor o igual a la de parto
-                        if (!isStartDateBeforeEndDate(inicio, parto)) {
-                            ocultarTeclado();
-                            Toast.makeText(VientresActivity.this, "La fecha de inicio no puede ser mayor que la fecha de parto.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
                         FirebaseDatabase db = FirebaseDatabase.getInstance();
                         DatabaseReference databaseReference = db.getReference(Vientre.class.getSimpleName());
-
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -288,9 +326,7 @@ public class VientresActivity extends DrawerBaseActivity {
                                         break;
                                     }
                                 }
-
                                 if(!res){
-
                                     ocultarTeclado();
                                     Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Identificacion ("+auxid+") No encontrado.\nNo se puede modificar", Toast.LENGTH_SHORT).show();
                                     txtid.setText("");
@@ -302,24 +338,21 @@ public class VientresActivity extends DrawerBaseActivity {
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
-
                     }//Cierra el if else
-
                 }
             });
 
         } //cierra el metodo boton modificar
-        private void botonRegistrar(){
+
+    private void botonRegistrar(){
             btnreg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if (txtid.getText().toString().trim().isEmpty()
                             || txtInicio.getText().toString().trim().isEmpty()
-                            || txtParto.getText().toString().trim().isEmpty()
                             || txtObserva.getText().toString().trim().isEmpty()
                             || txtEstado.getText().toString().trim().isEmpty()){
                         ocultarTeclado();
@@ -331,22 +364,6 @@ public class VientresActivity extends DrawerBaseActivity {
                         String parto = txtParto.getText().toString();
                         String observa = txtObserva.getText().toString();
                         String estado = txtEstado.getText().toString();
-
-                        // Validar formato de fechas
-                        if (!isValidDate(inicio) || !isValidDate(parto)) {
-                            ocultarTeclado();
-                            Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Formato de fecha incorrecto. Use dd/MM/yyyy.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        // Verificar que la fecha de inicio sea menor o igual a la de parto
-                        if (!isStartDateBeforeEndDate(inicio, parto)) {
-                            ocultarTeclado();
-                            Toast.makeText(VientresActivity.this, "La fecha de inicio no puede ser mayor que la fecha de parto.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-
 
                         FirebaseDatabase db = FirebaseDatabase.getInstance();
                         DatabaseReference databaseReference = db.getReference(Vientre.class.getSimpleName());
@@ -365,7 +382,6 @@ public class VientresActivity extends DrawerBaseActivity {
                                         Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "Registro("+auxid+") ya existente", Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-
                                 }
                                 if(!res){
 
@@ -378,7 +394,7 @@ public class VientresActivity extends DrawerBaseActivity {
                                     txtParto.setText("");
                                     txtObserva.setText("");
                                     txtEstado.setText("");
-
+                                    listarVientres();
                                 }
                             }
                             @Override
@@ -386,15 +402,12 @@ public class VientresActivity extends DrawerBaseActivity {
 
                             }
                         });
-
                     }//Cierra el if else
-
                 }
             });
-
         }//Cierra el metodo boton registrar
 
-        private void botonEliminar(){
+    private void botonEliminar(){
             btneli.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -425,18 +438,24 @@ public class VientresActivity extends DrawerBaseActivity {
                                         a.setCancelable(false);
                                         a.setTitle("ATENCION");
                                         a.setMessage("Estas por ELIMINAR el registro..");
-                                        res[0] = true;
+
                                         Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "ID ( "+auxId+" ) con inicio: ( "+inicio+" ) y parto ( "+parto+" )encontrado.\nUsted puede eliminar!!", Toast.LENGTH_SHORT).show();
-                                        a.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        // Create a SpannableString for "Cancelar" with green color
+                                        SpannableString cancelText = new SpannableString("Cancelar");
+                                        cancelText.setSpan(new ForegroundColorSpan(Color.GREEN), 0, cancelText.length(), 0);
+                                        a.setNegativeButton(cancelText, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-
+                                                // Acción para el botón "Cancelar"
                                             }
                                         });
-                                        a.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+
+                                        SpannableString deleteText = new SpannableString("Eliminar");
+                                        deleteText.setSpan(new ForegroundColorSpan(Color.RED), 0, deleteText.length(), 0);
+
+                                        a.setPositiveButton(deleteText, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-
                                                 ocultarTeclado();
                                                 x.getRef().removeValue();
                                                 listarVientres();
@@ -447,7 +466,9 @@ public class VientresActivity extends DrawerBaseActivity {
                                                 txtEstado.setText("");
                                             }
                                         });
-                                        a.show();
+
+                                        AlertDialog dialog = a.show();
+
                                         break;
                                     }
                                 }
@@ -475,86 +496,97 @@ public class VientresActivity extends DrawerBaseActivity {
             });
         }//cierra el metodo boton Eliminar
 
-        private void listarVientres(){
-            FirebaseDatabase db = FirebaseDatabase.getInstance();
-            DatabaseReference reference = db.getReference(Vientre.class.getSimpleName());
+    private void listarVientres() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference reference = db.getReference(Vientre.class.getSimpleName());
+        ArrayList<Vientre> listaVientre = new ArrayList<>();
+        ArrayAdapter<Vientre> adapter = new ArrayAdapter<>(com.example.lookcow.Controladora.VientresActivity.this, android.R.layout.simple_list_item_1, listaVientre);
+        lvDatos.setAdapter(adapter);
 
-            ArrayList<Vientre> listaVientre = new ArrayList<Vientre>();
-            ArrayAdapter<Vientre> adapter = new ArrayAdapter<Vientre>(com.example.lookcow.Controladora.VientresActivity.this, android.R.layout.simple_list_item_1 , listaVientre);
-            lvDatos.setAdapter(adapter);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listaVientre.clear(); // Limpiar la lista antes de agregar nuevos datos
+                LocalDate fechaActual = LocalDate.now(); // Obtener la fecha actual
 
-            reference.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    Vientre vientre = snapshot.getValue(Vientre.class);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Vientre vientre = dataSnapshot.getValue(Vientre.class);
                     listaVientre.add(vientre);
-                    adapter.notifyDataSetChanged();
+
+                    // Verificar si la fecha de parto es igual o menor a la fecha actual
+                    LocalDate fechaParto = convertirAFecha(vientre.getFechaParto());
+                    if (fechaParto != null && !fechaParto.isAfter(fechaActual)) {
+                       // mostrarAlertaFechaParto(vientre); // Mostrar alerta si la fecha de parto es igual o anterior
+                        mostrarNotificacionEnBarraDeEstado(vientre);
+                    }
                 }
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                    adapter.notifyDataSetChanged();
-                }
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                // Ordenar la lista por fecha de parto
+                Collections.sort(listaVientre, new Comparator<Vientre>() {
+                    @Override
+                    public int compare(Vientre v1, Vientre v2) {
+                        LocalDate fechaParto1 = convertirAFecha(v1.getFechaParto());
+                        LocalDate fechaParto2 = convertirAFecha(v2.getFechaParto());
+                        // Ordenar de forma ascendente (fechas más próximas primero)
+                        return fechaParto1.compareTo(fechaParto2);
+                    }
+                });
 
-                }
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                adapter.notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
+            }
 
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Manejar el error si es necesario
+                Log.e("VientresActivity", "Error al obtener datos de Firebase", error.toException());
+            }
+        });
 
-                }
-            });
+        lvDatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Vientre vientre = listaVientre.get(position);
+                AlertDialog.Builder a = new AlertDialog.Builder(com.example.lookcow.Controladora.VientresActivity.this);
+                a.setCancelable(true);
+                a.setTitle("Vientre Elegido");
+                String msg = "ID : " + vientre.getId() + "\n\n";
+                msg += "FechaInicio : " + vientre.getFechaInicio() + "\n\n";
+                msg += "FechaParto :<font color='#FFA500'> " + vientre.getFechaParto() + "</font><br><br>";
+                msg += "Observaciones : " + vientre.getObservaciones() + "\n\n";
+                msg += "Estado : " + vientre.getEstado();
 
-            lvDatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Vientre vientre = listaVientre.get(position);
-                    AlertDialog.Builder a = new AlertDialog.Builder(com.example.lookcow.Controladora.VientresActivity.this);
-                    a.setCancelable(true);
-                    a.setTitle("Vientre Elegido");
-                    String msg = "ID : "+ vientre.getId() + "\n\n";
-                    msg += "FechaInicio : " + vientre.getFechaInicio()+ "\n\n";
-                    msg += "FechaParto : " + vientre.getFechaParto()+ "\n\n";
-                    msg += "Observaciones : " + vientre.getObservaciones()+ "\n\n";
-                    msg += "Estado : " + vientre.getEstado();
+                // Mostrar el mensaje en el cuadro de diálogo
+                a.setMessage(Html.fromHtml(msg, Html.FROM_HTML_MODE_LEGACY));
+                a.show();
+            }
+        });
+    }
+    private void mostrarNotificacionEnBarraDeEstado(Vientre vientre) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "fecha_parto_channel";
 
-                    a.setMessage(msg);
-                    a.show();
-                }
-            });
-
-        }//cierra el metodo listarUsuarios
-
-    // Metodo que valida si realmente la fecha existe
-    private boolean isValidDate(String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false); // Desactiva la interpretación flexible de fechas
-        try {
-            Date date = sdf.parse(dateString); // Intenta convertir la cadena a una fecha
-            return true; // La fecha es válida
-        } catch (ParseException e) {
-            return false; // La fecha es inválida
+        // Crear un canal de notificación (requerido para Android 8.0 y superior)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Fecha de Parto",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            notificationManager.createNotificationChannel(channel);
         }
+
+        // Crear la notificación
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_vaca_alerta) // Icono de la notificación
+                .setContentTitle("Alerta de Fecha de Parto")
+                .setContentText("La vaca con ID " + vientre.getId() + " está pronta a parir.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        // Mostrar la notificación
+        notificationManager.notify(vientre.getId(), builder.build());
     }
 
-    // Metodo de validación que indica si la fecha de inicio es mayor a la de parto
-    private boolean isStartDateBeforeEndDate(String startDate, String endDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false);
-        try {
-            Date start = sdf.parse(startDate);
-            Date end = sdf.parse(endDate);
-            return !start.after(end); // Devuelve verdadero si la fecha de inicio no es después de la de parto
-        } catch (ParseException e) {
-            return false; // En caso de error, considerar fechas no válidas
-        }
-    }
-
-        private void ocultarTeclado(){
+    private void ocultarTeclado(){
             View view = this.getCurrentFocus();
             if (view != null) {
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -562,5 +594,4 @@ public class VientresActivity extends DrawerBaseActivity {
             }
         } // Cierra el método ocultarTeclado.
 
-
-    }   //cierra la clase
+}   //cierra la clase

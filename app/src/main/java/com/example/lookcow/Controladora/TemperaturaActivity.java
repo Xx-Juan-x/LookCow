@@ -1,8 +1,14 @@
 package com.example.lookcow.Controladora;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -12,9 +18,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.example.lookcow.Modelo.Temperatura;
 import com.example.lookcow.R;
@@ -33,7 +44,9 @@ public class TemperaturaActivity extends DrawerBaseActivity {
     private EditText txtid, txtTempActual, txtTempMax, txtTemMin, txtRangoTemp, txtestado;
     private Button btnbus, btnmod, btnreg, btneli, btnBusActual, btnBusMax;
     private ListView lvDatos;
-
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private static final String CHANNEL_ID = "Alerta de salud del equino";
+    private ArrayList<Temperatura> listaTemperaturaEnferma = new ArrayList<>();
     ActivityTemperaturaBinding activityBinding;
 
     @Override
@@ -64,7 +77,22 @@ public class TemperaturaActivity extends DrawerBaseActivity {
         botonRegistrar();
         botonEliminar();
         listarTemperaturas();
+        // Inicializa el ActivityResultLauncher aquí
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        // Permiso concedido. Continúa con la acción o el flujo de trabajo en tu app.
+                        Log.d("TemperaturaActivity", "Permiso de notificaciones concedido");
+                        mostrarNotificacion("TemperaturaActivity", "Permiso de notificaciones concedido");
+                    } else {
+                        // Explica al usuario que la función no está disponible porque requiere un permiso que el usuario ha denegado.
+                        Log.d("TemperaturaActivity", "Permiso de notificaciones denegado");
+                        Toast.makeText(this, "Permiso de notificaciones denegado. No se mostrarán notificaciones.", Toast.LENGTH_LONG).show();
+                    }
+                });
 
+        crearCanalNotificaciones();
     }   //cierra el onCreate
 
     private void botonBuscar(){
@@ -311,7 +339,6 @@ public class TemperaturaActivity extends DrawerBaseActivity {
         });
     }
 
-
     private void botonRegistrar(){
         btnreg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,7 +348,6 @@ public class TemperaturaActivity extends DrawerBaseActivity {
                         || txtTempActual.getText().toString().trim().isEmpty()
                         || txtTempMax.getText().toString().trim().isEmpty()
                         || txtTemMin.getText().toString().trim().isEmpty()
-                        // txtRangoTemp.getText().toString().trim().isEmpty()
                         || txtestado.getText().toString().trim().isEmpty()){
                     ocultarTeclado();
                     Toast.makeText(TemperaturaActivity.this, "Campos en blanco, completar!!", Toast.LENGTH_SHORT).show();
@@ -460,7 +486,7 @@ public class TemperaturaActivity extends DrawerBaseActivity {
         });
     }//cierra el metodo boton Eliminar
 
-    private void listarTemperaturas(){
+   /* private void listarTemperaturas(){
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference reference = db.getReference(Temperatura.class.getSimpleName());
 
@@ -513,7 +539,126 @@ public class TemperaturaActivity extends DrawerBaseActivity {
             }
         });
 
-    }//cierra el metodo listarTemperaturas
+    }//cierra el metodo listarTemperaturas*/
+   private void listarTemperaturas() {
+       FirebaseDatabase db = FirebaseDatabase.getInstance();
+       DatabaseReference reference = db.getReference(Temperatura.class.getSimpleName());
+
+       ArrayList<Temperatura> listaTemperatura = new ArrayList<>();
+       ArrayAdapter<Temperatura> adapter = new ArrayAdapter<>(TemperaturaActivity.this, android.R.layout.simple_list_item_1, listaTemperatura);
+       lvDatos.setAdapter(adapter);
+
+       reference.addChildEventListener(new ChildEventListener() {
+           @Override
+           public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+               Temperatura temperatura = snapshot.getValue(Temperatura.class);
+               listaTemperatura.add(temperatura);
+               adapter.notifyDataSetChanged();
+               verificarTemperaturaEnferma(temperatura);
+           }
+
+           @Override
+           public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+               Temperatura temperatura = snapshot.getValue(Temperatura.class);
+               if (temperatura != null) {
+                   verificarTemperaturaEnferma(temperatura);
+               }
+               adapter.notifyDataSetChanged();
+           }
+
+           @Override
+           public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+           }
+
+           @Override
+           public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError error) {
+           }
+       });
+
+        lvDatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Temperatura temperatura = listaTemperatura.get(position);
+            AlertDialog.Builder a = new AlertDialog.Builder(TemperaturaActivity.this);
+            a.setCancelable(true);
+            a.setTitle("Temperatura Elegida");
+            String msg = "ID : " + temperatura.getIdSensor() + "\n\n";
+            msg += "Temp Actual  : " + temperatura.getTemperaturaActual() + "\n\n";
+            msg += "Temp Maxima : " + temperatura.getTemperaturaMax() + "\n\n";
+            msg += "Temp Minima : " + temperatura.getTemperaturaMin() + "\n\n";
+            msg += "Rango Temp : " + temperatura.getRangoTemperatura() + "\n\n";
+            msg += "Estado : " + temperatura.getEstado();
+
+            a.setMessage(msg);
+            a.show();
+        }
+    });
+}
+
+    private void verificarTemperaturaEnferma(Temperatura temperatura) {
+        if (temperatura.getTemperaturaActual() > 37.5 || temperatura.getTemperaturaActual() < 39.5) {
+            listaTemperaturaEnferma.add(temperatura);
+        }
+        enviarNotificacionTemperaturasEnfermas();
+    }
+    private void enviarNotificacionTemperaturasEnfermas() {
+        if (!listaTemperaturaEnferma.isEmpty()) {
+            StringBuilder mensaje = new StringBuilder("Vacas con temperaturas anormales:\n");
+            for (Temperatura temp : listaTemperaturaEnferma) {
+                mensaje.append("Dispositivo ID: ").append(temp.getIdSensor())
+                        .append(" - Temp: ").append(temp.getTemperaturaActual()).append("°C\n");
+            }
+            mostrarNotificacion("¡Alerta!", mensaje.toString());
+            listaTemperaturaEnferma.clear();
+        }
+    }
+    private void mostrarNotificacion(String titulo, String mensaje) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_vaca_alerta)
+                .setContentTitle(titulo)
+                .setContentText(mensaje)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(mensaje))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            solicitarPermisoNotificaciones();
+            return;
+        }
+        manager.notify(1, builder.build());
+    }
+    private void solicitarPermisoNotificaciones() {
+        // Verifica si el permiso ya está concedido
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            // El permiso ya está concedido, procede a mostrar la notificación
+            mostrarNotificacion("PERMISO", "Se necesita el permiso de notificaciones para mostrar notificaciones.");
+        } else {
+            // El permiso no está concedido, solicítalo
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
+
+                Toast.makeText(this, "Se necesita el permiso de notificaciones para mostrar notificaciones.", Toast.LENGTH_LONG).show();
+            }
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
+    }
+
+    private void crearCanalNotificaciones() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Alertas de temperatura"; // Nombre visible para el usuario
+            String description = "Canal para alertas de temperatura"; // Descripción visible para el usuario
+            int importance = NotificationManager.IMPORTANCE_HIGH; // Importancia del canal
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
     private void ocultarTeclado(){
         View view = this.getCurrentFocus();
