@@ -3,7 +3,10 @@ package com.example.lookcow.Controladora;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -421,12 +424,16 @@ public class GrupoActivity extends DrawerBaseActivity {
                                     a.setMessage("Estas por ELIMINAR el registro..");
                                     res[0] = true;
                                     Toast.makeText(GrupoActivity.this, "ID ( " + auxId + " ) con ( " + nombre + " ) encontrado.\nUsted puede eliminar!!", Toast.LENGTH_SHORT).show();
-                                    a.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                    SpannableString cancelText = new SpannableString("Cancelar");
+                                    cancelText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, cancelText.length(), 0);
+                                    a.setNegativeButton(cancelText, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                         }
                                     });
-                                    a.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    SpannableString deleteText = new SpannableString("Eliminar");
+                                    deleteText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, deleteText.length(), 0);
+                                    a.setPositiveButton(deleteText, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             ocultarTeclado();

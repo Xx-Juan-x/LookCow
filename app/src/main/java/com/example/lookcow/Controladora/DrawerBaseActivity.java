@@ -98,6 +98,10 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         }else if (itemId == R.id.nav_perfil) {
             iniciarNuevaActividad(LoginActivity.class);
         }
+        else if (itemId == R.id.nav_dashboard) {
+            iniciarNuevaActividad(DashboardActivity.class);
+        }
+
     }
     private void iniciarNuevaActividad(Class<?> destinoactividad){
         startActivity(new Intent(this, destinoactividad));

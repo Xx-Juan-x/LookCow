@@ -85,6 +85,9 @@ public class VientresActivity extends DrawerBaseActivity {
         btnPrenado = findViewById(R.id.fechaButton);
         btnPrenado.setText(getFechaActual());
 
+        txtInicio.setEnabled(false);
+        txtParto.setEnabled(false);
+
         initDatePicker();
         initDatePicker2();
         botonBuscar();
@@ -438,11 +441,11 @@ public class VientresActivity extends DrawerBaseActivity {
                                         a.setCancelable(false);
                                         a.setTitle("ATENCION");
                                         a.setMessage("Estas por ELIMINAR el registro..");
-
+                                        res[0] = true;
                                         Toast.makeText(com.example.lookcow.Controladora.VientresActivity.this, "ID ( "+auxId+" ) con inicio: ( "+inicio+" ) y parto ( "+parto+" )encontrado.\nUsted puede eliminar!!", Toast.LENGTH_SHORT).show();
-                                        // Create a SpannableString for "Cancelar" with green color
+                                        // Create a SpannableString for "Cancelar" with white color
                                         SpannableString cancelText = new SpannableString("Cancelar");
-                                        cancelText.setSpan(new ForegroundColorSpan(Color.GREEN), 0, cancelText.length(), 0);
+                                        cancelText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, cancelText.length(), 0);
                                         a.setNegativeButton(cancelText, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -451,7 +454,7 @@ public class VientresActivity extends DrawerBaseActivity {
                                         });
 
                                         SpannableString deleteText = new SpannableString("Eliminar");
-                                        deleteText.setSpan(new ForegroundColorSpan(Color.RED), 0, deleteText.length(), 0);
+                                        deleteText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, deleteText.length(), 0);
 
                                         a.setPositiveButton(deleteText, new DialogInterface.OnClickListener() {
                                             @Override
@@ -467,7 +470,7 @@ public class VientresActivity extends DrawerBaseActivity {
                                             }
                                         });
 
-                                        AlertDialog dialog = a.show();
+                                        a.show();
 
                                         break;
                                     }
@@ -549,10 +552,10 @@ public class VientresActivity extends DrawerBaseActivity {
                 AlertDialog.Builder a = new AlertDialog.Builder(com.example.lookcow.Controladora.VientresActivity.this);
                 a.setCancelable(true);
                 a.setTitle("Vientre Elegido");
-                String msg = "ID : " + vientre.getId() + "\n\n";
-                msg += "FechaInicio : " + vientre.getFechaInicio() + "\n\n";
-                msg += "FechaParto :<font color='#FFA500'> " + vientre.getFechaParto() + "</font><br><br>";
-                msg += "Observaciones : " + vientre.getObservaciones() + "\n\n";
+                String msg = "ID : " + vientre.getId() + "<br><br>";
+                msg += "Fecha de Inicio : " + vientre.getFechaInicio() + "<br><br>";
+                msg += "Fecha de Parto : " + "<font color='#FFA500'>" + vientre.getFechaParto() + "</font><br><br>";
+                msg += "Observaciones : " + vientre.getObservaciones() + "<br><br>";
                 msg += "Estado : " + vientre.getEstado();
 
                 // Mostrar el mensaje en el cuadro de diálogo

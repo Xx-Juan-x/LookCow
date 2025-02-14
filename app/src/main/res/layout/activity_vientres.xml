@@ -6,221 +6,309 @@
     android:layout_height="match_parent"
     tools:context=".Controladora.VientresActivity"
     android:orientation="vertical"
-    android:layout_margin="10dp">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="Vientres"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textColor="@color/rojo"
-        android:textSize="34sp"
-        android:textStyle="bold" />
+    android:background="@drawable/fondo_vientre">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_margin="15dp"
+        android:background="#2B3E3B3B">
 
-        <EditText
-            android:id="@+id/txtid"
-            android:layout_width="200dp"
+        <TextView
+            android:id="@+id/textView_vientre"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Identificador"
-            android:textColorHint="@color/gray_claro"
-            android:textColor="@color/gray"
-            android:backgroundTint="@color/naranja"
             android:padding="10dp"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:background="@drawable/border"
-            android:inputType="number"
-            android:textAlignment="center" />
-
-        <Button
-            android:background="@drawable/border"
-            android:id="@+id/btnbus"
-            android:layout_width="190dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Buscar" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/textInicio"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="Fecha de Preñado"
-            android:textColorHint="@color/gray_claro"
-            android:textColor="@color/gray"
-            android:backgroundTint="@color/naranja"
-            android:padding="10dp"
-            android:textStyle="bold"
-            android:background="@drawable/border"
-            android:textSize="18sp"
-            android:textAlignment="center"/>
-
-        <Button
-            android:id="@+id/fechaButton"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="Jan 01 2020"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:background="@drawable/border"
-            style="?android:spinnerStyle"
-            android:drawableLeft="@drawable/baseline_calendar"
+            android:text="Vientres"
             android:textAlignment="center"
-            android:onClick="openDatePicker"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/txtFechaParto"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Fecha de Parto "
-            android:textColorHint="@color/gray_claro"
-            android:textColor="@color/gray"
-            android:backgroundTint="@color/naranja"
-            android:padding="10dp"
-            android:textSize="18dp"
+            android:textAllCaps="true"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:background="@drawable/border"
-            android:inputType="date"
-            android:textAlignment="center" />
+            android:textColor="@color/white"/>
 
-        <Button
-            android:id="@+id/fechaPartoButton"
-            android:layout_width="250dp"
+        <TextView
+            android:id="@+id/textView_vientres"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dec 31 2025"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            style="?android:spinnerStyle"
-            android:drawableLeft="@drawable/baseline_calendar"
-            android:background="@drawable/border"
+            android:text="Id Vientre"
             android:textAlignment="center"
-            android:onClick="openDatePickerParto"/>
+            android:textColor="#FDF0DE"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout_id_vientre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/txtid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Id Vientre"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/gray"
+                android:textColorHint="@color/gray"
+                android:textStyle="bold|italic"
+                android:textSize="16sp"
+                android:backgroundTint="#A1FFFFFF"
+                android:background="@drawable/border"
+                android:padding="11dp"
+                android:layout_marginTop="3dp"/>
+
+            <Button
+                android:id="@+id/btnbus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:text="Buscar"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:padding="20dp"
+                android:backgroundTint="#E169431F"
+                android:layout_marginTop="3dp"/>
+
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_fecha_preñado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha de Preñado"
+            android:textAlignment="center"
+            android:textColor="#FDF0DE"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginTop="3dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fechaButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jan 01 2020"
+                android:layout_weight="1"
+                android:textColor="@color/gray"
+                android:textStyle="bold|italic"
+                android:textSize="16dp"
+                android:background="@drawable/border_fecha"
+                style="?android:spinnerStyle"
+                android:drawableLeft="@drawable/baseline_calendar"
+                android:textAlignment="center"
+                android:onClick="openDatePicker"
+                android:layout_marginTop="3dp"/>
+
+            <EditText
+                android:id="@+id/textInicio"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:hint="Fecha de Preñado"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold|italic"
+                android:background="#983C3A3A"
+                android:padding="8dp"
+                android:layout_margin="5dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView_fecha_parto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha de Parto"
+            android:textAlignment="center"
+            android:textColor="#FDF0DE"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginTop="3dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fechaPartoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dec 31 2025"
+                android:layout_weight="1"
+                android:textColor="@color/gray"
+                android:textStyle="bold|italic"
+                android:textSize="16dp"
+                style="?android:spinnerStyle"
+                android:drawableLeft="@drawable/baseline_calendar"
+                android:background="@drawable/border_fecha"
+                android:textAlignment="center"
+                android:onClick="openDatePickerParto"
+                android:layout_marginTop="3dp"/>
+
+            <EditText
+                android:id="@+id/txtFechaParto"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:hint="Fecha de Parto"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold|italic"
+                android:background="#983C3A3A"
+                android:padding="8dp"
+                android:layout_margin="5dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView_observaciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Observaciones"
+            android:textAlignment="center"
+            android:textColor="#FDF0DE"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginTop="3dp"/>
 
         <EditText
             android:id="@+id/txtObservaciones"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Observaciones"
-            android:textColorHint="@color/gray_claro"
+            android:maxLength="10"
+            android:textAlignment="center"
             android:textColor="@color/gray"
-            android:backgroundTint="@color/naranja"
-            android:padding="10dp"
-            android:textSize="18dp"
-            android:textStyle="bold"
+            android:textColorHint="@color/gray"
+            android:textStyle="bold|italic"
+            android:textSize="16sp"
+            android:backgroundTint="#A1FFFFFF"
             android:background="@drawable/border"
-            android:inputType="text"
-            android:textAlignment="center" />
+            android:padding="11dp"
+            android:layout_marginTop="3dp"/>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/textView_estado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estado"
+            android:textAlignment="center"
+            android:textColor="#FDF0DE"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginTop="3dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/txtEstado"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Estado"
-            android:textColorHint="@color/gray_claro"
+            android:maxLength="10"
+            android:textAlignment="center"
             android:textColor="@color/gray"
-            android:backgroundTint="@color/naranja"
-            android:padding="10dp"
-            android:textSize="18dp"
+            android:textColorHint="@color/gray"
+            android:textStyle="bold|italic"
+            android:textSize="16sp"
+            android:backgroundTint="#A1FFFFFF"
+            android:background="@drawable/border"
+            android:padding="11dp"
+            android:layout_marginTop="3dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/btnmod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Modificar"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="#E169431F"
+                android:padding="20dp"/>
+
+            <Button
+                android:id="@+id/btnreg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="Registrar"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="#E169431F"
+                android:padding="20dp"/>
+
+            <Button
+                android:id="@+id/btneli"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Eliminar"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="#E169431F"
+                android:padding="20dp"/>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Listado de Vientres"
+            android:textAlignment="center"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:background="@drawable/border"
-            android:inputType="text"
-            android:textAlignment="center" />
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text=" id   FechaInicio   FechaParto    Observacion        Estado"
+            android:background="#C069431F"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ListView
+                android:id="@+id/lvDatos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@android:color/white"
+                android:dividerHeight="1dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_margin="8dp"
+                android:scrollbars="vertical"
+                android:background="#653E3B3B"
+                android:textAlignment="center" />
+        </LinearLayout>
 
     </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnmod"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border"
-            android:layout_weight="1"
-            android:backgroundTint="#819886FC"
-            android:text="Modificar" />
-
-        <Button
-            android:id="@+id/btnreg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/border"
-            android:layout_weight="1"
-            android:backgroundTint="#7E50E056"
-            android:text="Registrar" />
-
-        <Button
-            android:id="@+id/btneli"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border"
-            android:backgroundTint="#62FF1A1A"
-            android:layout_weight="1"
-            android:text="Eliminar" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Listado de Vientres"
-        android:textAlignment="center"
-        android:textColor="@color/rojo"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/white"
-        android:background="#4EFF5722"
-        android:text=" id   FechaInicio   FechaParto    Observacion        Estado"
-        android:textSize="16sp"
-        android:textStyle="bold|italic" />
-
-    <ListView
-        android:id="@+id/lvDatos"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
 </LinearLayout>

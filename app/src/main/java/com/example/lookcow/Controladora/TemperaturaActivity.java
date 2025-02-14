@@ -6,8 +6,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -439,13 +442,19 @@ public class TemperaturaActivity extends DrawerBaseActivity {
                                     a.setMessage("Estas por ELIMINAR el registro..");
                                     res[0] = true;
                                     Toast.makeText(com.example.lookcow.Controladora.TemperaturaActivity.this, "ID ( "+auxId+" ) con ( "+tempActual+" ) encontrado.\nUsted puede eliminar!!", Toast.LENGTH_SHORT).show();
-                                    a.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                    SpannableString cancelText = new SpannableString("Cancelar");
+                                    cancelText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, cancelText.length(), 0);
+                                    a.setNegativeButton(cancelText, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
                                         }
                                     });
-                                    a.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+
+                                    SpannableString deleteText = new SpannableString("Eliminar");
+
+                                    deleteText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, deleteText.length(), 0);
+                                    a.setPositiveButton(deleteText, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
@@ -600,7 +609,7 @@ public class TemperaturaActivity extends DrawerBaseActivity {
 }
 
     private void verificarTemperaturaEnferma(Temperatura temperatura) {
-        if (temperatura.getTemperaturaActual() > 37.5 || temperatura.getTemperaturaActual() < 39.5) {
+        if (temperatura.getTemperaturaActual() > 39.5 || temperatura.getTemperaturaActual() < 37.5) {
             listaTemperaturaEnferma.add(temperatura);
         }
         enviarNotificacionTemperaturasEnfermas();

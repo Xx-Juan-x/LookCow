@@ -137,7 +137,8 @@
         <activity
             android:name=".Controladora.VientresActivity"
             android:exported="true"
-            android:theme="@style/Base.Theme.LookCowMapa">
+            android:theme="@style/Base.Theme.LookCowMapa"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controladora.InicioActivity" />
@@ -154,7 +155,8 @@
         <activity
             android:name=".Controladora.TemperaturaActivity"
             android:exported="true"
-            android:theme="@style/Base.Theme.LookCowMapa">
+            android:theme="@style/Base.Theme.LookCowMapa"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controladora.InicioActivity" />
@@ -195,6 +197,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controladora.InicioActivity" />
         </activity>
+        <activity
+            android:name=".Controladora.DashboardActivity"
+            android:exported="true"
+            android:theme="@style/Base.Theme.LookCowMapa"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Controladora.InicioActivity" />
+        </activity>
+
     </application>
 
 </manifest>

@@ -48,6 +48,11 @@
             android:id="@+id/nav_dispositivos"
             android:icon="@drawable/nav_dispositivos"
             android:title="Dispositivos"/>
+        <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/dashboard"
+            android:title="Dashboard"/>
+
     </group>
 
 </menu>

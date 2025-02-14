@@ -61,11 +61,11 @@
                     android:id="@+id/btnbus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:text="Buscar"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:padding="8dp"
+                    android:padding="20dp"
                     android:backgroundTint="#E169431F"/>
             </LinearLayout>
 
@@ -114,17 +114,17 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="235dp"
-                    android:layout_height="38dp"
+                    android:layout_height="45dp"
                     android:textAlignment="center"
-                    app:cardBackgroundColor="#D3FDFDFD"
-                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="#653E3B3B"
+                    app:cardCornerRadius="5dp"
                     app:cardElevation="@dimen/cardview_default_radius">
 
                     <Spinner
                         android:id="@+id/spinner_raza"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/gray"
+                        android:backgroundTint="@color/black"
                         android:fadeScrollbars="true"
                         android:textAlignment="center"
                         android:prompt="@string/seleccionar_raza"/>
@@ -134,14 +134,14 @@
                     android:id="@+id/txtRaza"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#653E3B3B"
                     android:hint="Raza"
-                    android:backgroundTint="#A1FFFFFF"
-                    android:ems="20"
-                    android:inputType="text"
+                    android:padding="11dp"
                     android:textAlignment="center"
                     android:textColor="@color/white"
+                    android:textColorHint="@color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold|italic" />
+                    android:textStyle="bold|italic"/>
             </LinearLayout>
 
             <LinearLayout
