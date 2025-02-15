@@ -204,59 +204,6 @@ public class TemperaturaActivity extends DrawerBaseActivity {
         });
 
     }//cierra el metodo boton buscar x Sexo
-    /*private void botonBuscarRaza(){
-
-        btnBusMax.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (txtTempMax.getText().toString().trim().isEmpty()){
-                    ocultarTeclado();
-                    Toast.makeText(TemperaturaActivity.this, "Escriba una Temp para BUSCAR!!!", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-                    String tempMax = txtTempMax.getText().toString();
-                    FirebaseDatabase db = FirebaseDatabase.getInstance();
-                    DatabaseReference databaseReference = db.getReference(Temperatura.class.getSimpleName());
-                    // DatabaseReference databaseReference = db.getReference().child("Temperaturas");
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                            boolean res = false;
-                            for (DataSnapshot x : snapshot.getChildren()) {
-
-                                if (tempMax.equalsIgnoreCase(x.child("temperaturaMax").getValue().toString())) {
-                                    res = true;
-                                    ocultarTeclado();
-                                    txtid.setText(x.child("idSensor").getValue().toString());
-                                    txtTempActual.setText(x.child("temperaturaActual").getValue().toString());
-                                    txtTemMin.setText(x.child("temperaturaMin").getValue().toString());
-                                    txtRangoTemp.setText(x.child("rangoTemperatura").getValue().toString());
-                                    txtestado.setText(x.child("estado").getValue().toString());
-                                    break;
-                                }
-
-                            }
-                            if (!res){
-                                ocultarTeclado();
-                                Toast.makeText(TemperaturaActivity.this, "Temp Maxima ("+tempMax+") no encontrada!!", Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                } //cierra el if/else
-            }
-        });
-
-    }*///cierra el metodo boton buscar x Raza
 
     private void botonModificar() {
         btnmod.setOnClickListener(new View.OnClickListener() {
@@ -495,60 +442,6 @@ public class TemperaturaActivity extends DrawerBaseActivity {
         });
     }//cierra el metodo boton Eliminar
 
-   /* private void listarTemperaturas(){
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference reference = db.getReference(Temperatura.class.getSimpleName());
-
-        ArrayList<Temperatura> listaTemperatura = new ArrayList<Temperatura>();
-        ArrayAdapter<Temperatura> adapter = new ArrayAdapter<Temperatura>(TemperaturaActivity.this, android.R.layout.simple_list_item_1 , listaTemperatura);
-        lvDatos.setAdapter(adapter);
-
-        reference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Temperatura temperatura = snapshot.getValue(Temperatura.class);
-                listaTemperatura.add(temperatura);
-                adapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                adapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        lvDatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Temperatura temperatura = listaTemperatura.get(position);
-                AlertDialog.Builder a = new AlertDialog.Builder(TemperaturaActivity.this);
-                a.setCancelable(true);
-                a.setTitle("Temperatura Elegida");
-                String msg = "ID : "+ temperatura.getIdSensor() + "\n\n";
-                msg += "Temp Actual  : " + temperatura.getTemperaturaActual()+ "\n\n";
-                msg += "Temp Maxima : " + temperatura.getTemperaturaMax()+ "\n\n";
-                msg += "Temp Minima : " + temperatura.getTemperaturaMin()+ "\n\n";
-                msg += "Rango Temp : " + temperatura.getRangoTemperatura()+ "\n\n";
-                msg += "Estado : " + temperatura.getEstado();
-
-                a.setMessage(msg);
-                a.show();
-            }
-        });
-
-    }//cierra el metodo listarTemperaturas*/
    private void listarTemperaturas() {
        FirebaseDatabase db = FirebaseDatabase.getInstance();
        DatabaseReference reference = db.getReference(Temperatura.class.getSimpleName());

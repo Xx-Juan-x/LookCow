@@ -1,10 +1,154 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="#EEFFFFFF">
 
-    <WebView
-        android:id="@+id/analyticsWebView"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</RelativeLayout>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView_grafico_razas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estadística de Razas"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold|italic" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" >
+
+            </com.github.mikephil.charting.charts.BarChart>
+
+            <TextView
+                android:id="@+id/textView_grafico_temperaturas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sensor de Temperaturas"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold|italic"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="80dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:background="@color/rojo"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/punto_rojo"
+                            android:layout_alignParentStart="true"
+                            android:backgroundTint="@color/rojo"
+                            android:shape="oval" />
+
+                        <TextView
+                            android:id="@+id/textView_temperatura_alta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:text="Temperatura Alta"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp">
+
+                        <View
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:background="@color/verde"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/punto_verde"
+                            android:layout_alignParentStart="true"
+                            android:backgroundTint="@color/verde"
+                            android:shape="oval" />
+
+                        <TextView
+                            android:id="@+id/textView_temperatura_normal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Temperatura Normal"
+                            android:layout_marginLeft="3dp"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:background="@color/azul"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/punto_azul"
+                            android:layout_alignParentStart="true"
+                            android:backgroundTint="@color/azul"
+                            android:shape="oval" />
+
+                        <TextView
+                            android:id="@+id/textView_temperatura_baja"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Temperatura Baja"
+                            android:textAlignment="textEnd"
+                            android:layout_marginLeft="3dp"
+                            android:textColor="@color/black"
+                            android:textSize="10dp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView_grafico_vientres"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estadística de Vientres"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold|italic"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChartVientres"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
