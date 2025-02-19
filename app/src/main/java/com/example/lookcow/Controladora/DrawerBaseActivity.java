@@ -51,6 +51,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
                 menu.findItem(R.id.nav_permisos).setVisible(false);
                 menu.findItem(R.id.nav_grupos).setVisible(false);
                 menu.findItem(R.id.nav_personas).setVisible(false);
+                menu.findItem(R.id.nav_dashboard).setVisible(false);
+                menu.findItem(R.id.nav_auditoria).setVisible(false);
                 break;
             case "peon":
                 // Ocultar items específicos para peones
@@ -59,6 +61,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
                 menu.findItem(R.id.nav_personas).setVisible(false);
                 menu.findItem(R.id.nav_vientres).setVisible(false);
                 menu.findItem(R.id.nav_temperaturas).setVisible(false);
+                menu.findItem(R.id.nav_dashboard).setVisible(false);
+                menu.findItem(R.id.nav_auditoria).setVisible(false);
                 break;
         }
         //fin item menu
@@ -97,9 +101,10 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             iniciarNuevaActividad(VientresActivity.class);
         }else if (itemId == R.id.nav_perfil) {
             iniciarNuevaActividad(LoginActivity.class);
-        }
-        else if (itemId == R.id.nav_dashboard) {
+        }else if (itemId == R.id.nav_dashboard) {
             iniciarNuevaActividad(DashboardActivity.class);
+        }else if (itemId == R.id.nav_auditoria) {
+            iniciarNuevaActividad(AuditoriaActivity.class);
         }
 
     }

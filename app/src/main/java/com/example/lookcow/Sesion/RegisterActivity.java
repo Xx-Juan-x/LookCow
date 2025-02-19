@@ -19,6 +19,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.lookcow.Controladora.AuditoriaUtil;
 import com.example.lookcow.Modelo.ReadWriteUserDetails;
 import com.example.lookcow.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -205,6 +206,9 @@ public class RegisterActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
 
                     FirebaseUser firebaseUser = auth.getCurrentUser();
+
+                    // Registrar auditoría de inicio de sesión
+                    AuditoriaUtil.registrarAccion("Registro de usuario");
 
                     //Actualizamos la visualizacion del usuario
                     UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(editNombre).build();

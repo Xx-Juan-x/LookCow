@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.lookcow.Controladora.AuditoriaUtil;
 import com.example.lookcow.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -130,6 +131,9 @@ public class LoginActivity extends AppCompatActivity {
                     //Verificar si el email del usuario esta verificado para acceder al sistema
                     if (Objects.requireNonNull(firebaseUser).isEmailVerified()){
                         Toast.makeText(LoginActivity.this, "Ya estas logueado", Toast.LENGTH_SHORT).show();
+
+                        // Registrar auditoría de inicio de sesión
+                        AuditoriaUtil.registrarAccion("Inicio de sesión");
 
                         //Abrir el perfil de usuario
                         //Comenzar el UserProfile Activity

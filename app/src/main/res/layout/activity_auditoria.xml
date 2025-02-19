@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Controladora.AuditoriaActivity"
+    android:background="@color/gray_oscuro">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Auditoria"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:textColor="@color/white"/>
+
+        <!-- Campo de búsqueda por usuario -->
+        <EditText
+            android:id="@+id/editTextUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/gray"
+            android:textColor="@color/gray"
+            android:backgroundTint="#A1FFFFFF"
+            android:padding="11dp"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:background="@drawable/border"
+            android:hint="Buscar por usuario" />
+
+        <!-- Campo de búsqueda por fecha -->
+        <EditText
+            android:id="@+id/editTextFecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/gray"
+            android:textColor="@color/gray"
+            android:backgroundTint="#A1FFFFFF"
+            android:padding="11dp"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:background="@drawable/border"
+            android:layout_marginTop="5dp"
+            android:hint="Buscar por fecha (dd/MM/yyyy)" />
+
+        <!-- Botón de búsqueda -->
+        <Button
+            android:id="@+id/btnBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Buscar"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:backgroundTint="#E169431F"
+            android:padding="20dp"/>
+
+        <!-- RecyclerView para mostrar los resultados -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAuditoria"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/black"
+            android:background="@drawable/border"
+            android:layout_marginTop="5dp" />
+    </LinearLayout>
+
+</LinearLayout>

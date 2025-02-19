@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.lookcow.Controladora.AuditoriaUtil;
 import com.example.lookcow.R;
 import com.example.lookcow.Controladora.InicioActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -242,6 +243,9 @@ public class DeleteProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 Log.d(TAG, "OnSuccess: User Data Deleted");
+
+                // Registrar auditoría de eliminación de perfil de usuario
+                AuditoriaUtil.registrarAccion("Eliminó su Usuario");
 
                 borrarUsuario();
             }

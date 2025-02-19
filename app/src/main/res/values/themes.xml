@@ -18,7 +18,7 @@
         <item name="colorAccent">#FF0000</item> <!-- Color de acento -->
         <item name="android:windowBackground">@android:color/white</item> <!-- Fondo del diálogo -->
         <item name="android:textColorPrimary">#000000</item> <!-- Color del texto principal -->
-            </style>
+    </style>
 
     <style name="Theme.LookCow" parent="Base.Theme.LookCow" />
 </resources>

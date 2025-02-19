@@ -206,6 +206,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controladora.InicioActivity" />
         </activity>
+        <activity
+            android:name=".Controladora.AuditoriaActivity"
+            android:exported="true"
+            android:theme="@style/Base.Theme.LookCowMapa"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Controladora.InicioActivity" />
+        </activity>
 
     </application>
 

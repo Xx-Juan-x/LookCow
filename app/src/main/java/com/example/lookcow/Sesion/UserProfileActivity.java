@@ -29,6 +29,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.lookcow.Controladora.AuditoriaUtil;
 import com.example.lookcow.Modelo.ReadWriteUserDetails;
 import com.example.lookcow.R;
 import com.example.lookcow.Controladora.InicioActivity;
@@ -238,12 +239,17 @@ public class UserProfileActivity extends AppCompatActivity {
             Intent intent = new Intent( UserProfileActivity.this, DeleteProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.menu_logout) {
+
+            // Registrar Auditoria de Cierre de Sesión
+            AuditoriaUtil.registrarAccion("Cierre de sesión");
+
             firebaseAuth.signOut();
             Toast.makeText(UserProfileActivity.this, "Sesión Cerrrada", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(UserProfileActivity.this, LoginActivity.class);
             //Limpiar form, por si el ususario preciona la tecla volver para ver los datos anteriores
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+
             finish(); // Cerramos UserProfileActivity
         } else {
             Toast.makeText(UserProfileActivity.this, "Ocurrió un error!!", Toast.LENGTH_SHORT).show();

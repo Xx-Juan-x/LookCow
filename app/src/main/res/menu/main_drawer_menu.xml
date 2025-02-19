@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
         android:checkableBehavior="single">
-
         <item
             android:id="@+id/nav_inicio"
             android:icon="@drawable/nav_inicio"
@@ -15,10 +14,6 @@
             android:id="@+id/nav_personas"
             android:icon="@drawable/nav_personas"
             android:title="Personas"/>
-<!--        <item-->
-<!--            android:id="@+id/nav_tipos_personas"-->
-<!--            android:icon="@drawable/nav_tipos_personas"-->
-<!--            android:title="Tipo Personas"/>-->
         <item
             android:id="@+id/nav_permisos"
             android:icon="@drawable/nav_permisos"
@@ -31,7 +26,6 @@
             android:id="@+id/nav_temperaturas"
             android:icon="@drawable/nav_temperaturas"
             android:title="Temperaturas"/>
-
         <item
             android:id="@+id/nav_vientres"
             android:icon="@drawable/nav_vientres"
@@ -52,7 +46,10 @@
             android:id="@+id/nav_dashboard"
             android:icon="@drawable/dashboard"
             android:title="Reportes"/>
-
+        <item
+            android:id="@+id/nav_auditoria"
+            android:icon="@drawable/nav_auditoria"
+            android:title="Auditoria"/>
     </group>
 
 </menu>
