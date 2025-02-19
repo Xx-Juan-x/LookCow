@@ -72,7 +72,7 @@
             android:id="@+id/recyclerViewAuditoria"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="#5B5B5B"
             android:background="@drawable/border"
             android:layout_marginTop="5dp" />
     </LinearLayout>
