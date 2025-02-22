@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class AuditoriaActivity extends AppCompatActivity {
+public class AuditoriaActivity extends DrawerBaseActivity {
     ActivityAuditoriaBinding activityBinding;
     private EditText editTextUsuario, editTextFecha;
     private Button btnBuscar;
